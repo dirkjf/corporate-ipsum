@@ -88,7 +88,7 @@
   fetch('./data.json')
       .then(response => response.json())
       .then(data => {
-        return dataReady(data)
+        return dataReady(data);
       })
       .catch(error => console.error(error));
 
@@ -105,45 +105,37 @@
   }
 
   function randomIntFromInterval(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min)
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   function getParagraphs(data, number) {
     let paragraphs = [];
     for (let i = 0; i < number; i++) {
-      paragraphs.push(getNumberOfLines(data, randomIntFromInterval(2, 4)))
+      paragraphs.push(getNumberOfLines(data, randomIntFromInterval(2, 4)));
     }
     return paragraphs;
   }
 
   function copy(event) {
-    event.target.innerText = '....'
+    event.target.innerText = '...';
 
-    const blockElements = event.target.parentElement.children;
+    let blockElements = Array.from(event.target.previousElementSibling.children);
+
     let copyText = '';
-
-    const paragraphs = []
-
-    for (let item of blockElements) {
-      if (item.tagName === 'P') {
-        paragraphs.push(item.innerText);
-      }
-    }
-
-    if (paragraphs.length === 1) {
-      copyText = paragraphs[0];
+    if (blockElements.length === 1) {
+      copyText = blockElements[0].innerText;
     } else {
-      let iterations = paragraphs.length;
-      for (let item of paragraphs) {
-        copyText += item;
+      let iterations = blockElements.length;
+      for (let item of blockElements) {
+        copyText += item.innerText;
         if (--iterations) {
           copyText += '\n';
         }
       }
     }
 
-    setTimeout(() => event.target.innerText = '✔', 200)
-    setTimeout(() => event.target.innerText = 'copy', 2000)
+    setTimeout(() => event.target.innerText = '✔', 200);
+    setTimeout(() => event.target.innerText = 'copy', 2000);
     navigator.clipboard.writeText(copyText);
   }
 
@@ -156,16 +148,15 @@
     text.forEach((text) => {
       let paragraph = document.createElement('p')
       paragraph.innerHTML = text;
-      textWrapper.appendChild(paragraph)
+      textWrapper.appendChild(paragraph);
     })
 
-    block.appendChild(textWrapper)
+    block.appendChild(textWrapper);
 
-
-    let button = document.createElement('button')
+    let button = document.createElement('button');
     button.innerText = 'copy';
     button.onclick = copy;
-    block.appendChild(button)
+    block.appendChild(button);
     return block;
   }
 
