@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Corporate Lorem</title>
+	<title>Corporate Ipsum</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300&display=swap" rel="stylesheet">
 </head>
 
 <style>
-    *, *::before, *::after  {
+    *, *::before, *::after {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -20,37 +20,49 @@
         justify-content: center;
         font-family: 'Fira Sans', sans-serif;
         font-size: 120%;
+        background-color: whitesmoke;
     }
-    
+
     button {
-	    float: right;
-	    width: 100px;
-	    height: 50px;
-	    border: 1px solid #323842;
-	    background-color: whitesmoke;
-	    color: black;
-	    cursor: pointer;
-	    font-size: 1.1rem;
-	    border-radius: 4px;
+        float: right;
+        width: 8em;
+        height: 3em;
+        border: 1px solid #323842;
+        background-color: whitesmoke;
+        color: black;
+        cursor: pointer;
+        font-size: 1.1rem;
+        border-radius: 4px;
     }
+
     button:hover {
-	    background-color: #dadbdc;
+        background-color: #dadbdc;
     }
+
     p {
-        width: 640px;
+        width: 100%;
     }
 
     #root {
-        padding: 20px;
-        width: 860px;
+        width: min(100%, 860px);
     }
 
     #root h1 {
-        margin-bottom: .4em;
+        margin: .4em 0;
     }
 
-    #root div {
-        padding: 1em 0;
+    #root > div {
+        background-color: white;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 20px;
+        border: 1px dotted #9fa1a4;
+    }
+
+    .text-wrapper {
+        width: 100%;
+        margin-right: 2em;
     }
 
     #root p + p {
@@ -109,7 +121,7 @@
 
     const blockElements = event.target.parentElement.children;
     let copyText = '';
-    
+
     const paragraphs = []
 
     for (let item of blockElements) {
@@ -117,20 +129,19 @@
         paragraphs.push(item.innerText);
       }
     }
-    
-    if (paragraphs.length === 1){
+
+    if (paragraphs.length === 1) {
       copyText = paragraphs[0];
     } else {
       let iterations = paragraphs.length;
-      for (let item of paragraphs)
-      {
+      for (let item of paragraphs) {
         copyText += item;
         if (--iterations) {
-          copyText += '\n\n';
+          copyText += '\n';
         }
       }
     }
-    
+
     setTimeout(() => event.target.innerText = '✔', 200)
     setTimeout(() => event.target.innerText = 'copy', 2000)
     navigator.clipboard.writeText(copyText);
@@ -139,17 +150,22 @@
   function createBlock(text) {
     let block = document.createElement('div');
 
-    let button = document.createElement('button')
-    button.innerText = 'copy';
-    button.onclick = copy;
-    block.appendChild(button)
+    const textWrapper = document.createElement('div');
+    textWrapper.className = 'text-wrapper';
 
     text.forEach((text) => {
       let paragraph = document.createElement('p')
       paragraph.innerHTML = text;
-      block.appendChild(paragraph)
+      textWrapper.appendChild(paragraph)
     })
-    
+
+    block.appendChild(textWrapper)
+
+
+    let button = document.createElement('button')
+    button.innerText = 'copy';
+    button.onclick = copy;
+    block.appendChild(button)
     return block;
   }
 
