@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Corporate Lorem</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    *, *::before, *::after  {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        font-family: 'Fira Sans', sans-serif;
+        font-size: 120%;
+    }
+    
+    button {
+	    float: right;
+	    width: 100px;
+	    height: 50px;
+	    border: 1px solid #323842;
+	    background-color: whitesmoke;
+	    color: black;
+	    cursor: pointer;
+	    font-size: 1.1rem;
+	    border-radius: 4px;
+    }
+    button:hover {
+	    background-color: #dadbdc;
+    }
+    p {
+        width: 640px;
+    }
+
+    #root {
+        padding: 20px;
+        width: 860px;
+    }
+
+    #root h1 {
+        margin-bottom: .4em;
+    }
+
+    #root div {
+        padding: 1em 0;
+    }
+
+    #root p + p {
+        margin-top: 1em;
+    }
+
+    #root div + div {
+        margin-top: 1em;
+    }
+
+    #root h2 + p {
+        margin-top: .2em;
+    }
+</style>
+<body>
+<main id="root">
+	<h1>Corporate Ipsum</h1>
+</main>
+
+<script>
+  const root = document.getElementById('root')
+
+  fetch('./data.json')
+      .then(response => response.json())
+      .then(data => {
+        return dataReady(data)
+      })
+      .catch(error => console.error(error));
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function getNumberOfLines(data, number) {
+    shuffleArray(data);
+    return [data.slice(0, number).join(' ')];
+  }
+
+  function randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  }
+
+  function getParagraphs(data, number) {
+    let paragraphs = [];
+    for (let i = 0; i < number; i++) {
+      paragraphs.push(getNumberOfLines(data, randomIntFromInterval(2, 4)))
+    }
+    return paragraphs;
+  }
+
+  function copy(event) {
+    event.target.innerText = '....'
+
+    const blockElements = event.target.parentElement.children;
+    let copyText = '';
+    
+    const paragraphs = []
+
+    for (let item of blockElements) {
+      if (item.tagName === 'P') {
+        paragraphs.push(item.innerText);
+      }
+    }
+    
+    if (paragraphs.length === 1){
+      copyText = paragraphs[0];
+    } else {
+      let iterations = paragraphs.length;
+      for (let item of paragraphs)
+      {
+        copyText += item;
+        if (--iterations) {
+          copyText += '\n\n';
+        }
+      }
+    }
+    
+    setTimeout(() => event.target.innerText = '✔', 200)
+    setTimeout(() => event.target.innerText = 'copy', 2000)
+    navigator.clipboard.writeText(copyText);
+  }
+
+  function createBlock(text) {
+    let block = document.createElement('div');
+
+    let button = document.createElement('button')
+    button.innerText = 'copy';
+    button.onclick = copy;
+    block.appendChild(button)
+
+    text.forEach((text) => {
+      let paragraph = document.createElement('p')
+      paragraph.innerHTML = text;
+      block.appendChild(paragraph)
+    })
+    
+    return block;
+  }
+
+  function dataReady(data) {
+    root.appendChild(createBlock(getNumberOfLines(data, 1)));
+    root.appendChild(createBlock(getNumberOfLines(data, 3)));
+    root.appendChild(createBlock(getNumberOfLines(data, 5)));
+    root.appendChild(createBlock(getParagraphs(data, 4)));
+  }
+</script>
+</body>
+</html>
